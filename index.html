@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rivian Clubs of America — Chapters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+:root{--ink:#1e3708;--ink-dark:#152605;--white:#fff;--muted:#5a6452;--bg:#fafaf7;--shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)}
+*{box-sizing:border-box}
+body{font-family:'Noto Sans',sans-serif;margin:0;color:#222;background:var(--bg);line-height:1.6}
+h1,h2,h3{font-family:'Montserrat',sans-serif;font-weight:700;color:var(--ink)}
+a{color:var(--ink);text-decoration:none;font-weight:500}
+a:hover{text-decoration:underline}
+.site-header{position:sticky;top:0;z-index:1000;background:var(--ink);color:var(--white);box-shadow:var(--shadow);padding:1rem 0}
+.site-header a{color:var(--white);text-decoration:none}
+.site-header .container{max-width:1200px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.site-logo{display:flex;align-items:center;gap:.5rem}
+.site-logo img{height:40px;width:40px;display:block}
+.site-logo .site-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.02em}
+.nav-list{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:1rem}
+.nav-link{color:var(--white);font-weight:500;font-family:'Noto Sans',sans-serif}
+.nav-link:hover,.nav-link:focus{opacity:.8;text-decoration:none}
+.nav-dropdown{position:relative}
+.nav-dropdown details>summary{cursor:pointer;list-style:none}
+.nav-dropdown details>summary::-webkit-details-marker{display:none}
+.nav-dropdown details>summary::after{content:" \25BE";font-size:.8em;margin-left:.15rem}
+.nav-dropdown details[open]>summary::after{content:" \25B4"}
+.nav-submenu{position:absolute;top:calc(100% + .25rem);right:0;min-width:12rem;list-style:none;margin:0;padding:.5rem 0;background:var(--ink-dark);box-shadow:var(--shadow);border-radius:4px;z-index:1001}
+.nav-submenu .nav-link{display:block;padding:.4rem 1rem;font-weight:400}
+.nav-submenu .nav-link:hover,.nav-submenu .nav-link:focus{background:rgba(255,255,255,.08);opacity:1}
+@media (max-width:720px){.nav-list{gap:.75rem;flex-wrap:wrap}.nav-link{font-size:.9rem}.site-logo .site-title{display:none}}
+.hero{width:100%;aspect-ratio:5/2;background:#222 url('hero.jpg') center/cover no-repeat}
+@media (max-width:720px){.hero{aspect-ratio:3/2}}
+#chapter-map{width:100%;height:600px;background:#e7eaf0}
+@media (max-width:720px){#chapter-map{height:400px}}
+#chapter-map a{font-weight:600}
+main{padding:0}
+.page-header{max-width:1100px;margin:0 auto;padding:3rem 1.25rem 2rem;text-align:center}
+.page-title{font-size:2.5rem;margin:0 0 1.5rem;letter-spacing:.01em}
+.page-intro{max-width:760px;margin:0 auto;font-size:1.125rem;font-weight:600;color:#333;line-height:1.5}
+.regions{max-width:760px;margin:0 auto;padding:3rem 1.25rem 1rem}
+section.region{margin-bottom:2.5rem}
+section.region h2{font-size:1.5rem;margin:0 0 1rem;text-transform:uppercase;letter-spacing:.03em;font-weight:700}
+section.region ul{list-style:none;padding:0;margin:0}
+section.region li{margin:.6rem 0;font-size:1.05rem}
+footer.site-footer{margin-top:3rem;padding:2rem 1.25rem;border-top:1px solid #e5e3da;font-size:.9rem;color:var(--muted);text-align:center;line-height:1.7}
+footer.site-footer p{margin:.25rem 0}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="container">
+<a href="./" class="site-logo" aria-label="Rivian Clubs of America - Home">
+<img src="rca-logo.png" alt="Rivian Clubs of America">
+<span class="site-title">Rivian Clubs of America</span>
+</a>
+<nav aria-label="Main navigation">
+<ul class="nav-list">
+<li><a href="https://rivianclubs.org/membership" class="nav-link">Membership</a></li>
+<li><a href="./" class="nav-link">Chapters</a></li>
+<li><a href="https://rivianclubs.org/news" class="nav-link">News</a></li>
+<li class="nav-dropdown"><details><summary class="nav-link">Info</summary>
+<ul class="nav-submenu">
+<li><a href="https://rivianclubs.org/about" class="nav-link">About</a></li>
+<li><a href="https://rivianclubs.org/board-of-directors" class="nav-link">Board of Directors</a></li>
+<li><a href="https://rivianclubs.org/bylaws" class="nav-link">Bylaws</a></li>
+<li><a href="https://rivianclubs.org/code-of-conduct" class="nav-link">Code of Conduct</a></li>
+<li><a href="https://rivianclubs.org/faq" class="nav-link">FAQ</a></li>
+<li><a href="https://rivianclubs.org/contact" class="nav-link">Contact</a></li>
+</ul>
+</details></li>
+<li><a href="https://rivianclubs.org/shop" class="nav-link">Shop</a></li>
+<li><a href="https://rivianclubs.org/login" class="nav-link">Log In</a></li>
+</ul>
+</nav>
+</div>
+</header>
+<div class="hero" role="img" aria-label="Rivians gathered outdoors"></div>
+<main>
+<div class="page-header">
+<h1 class="page-title">Chapters</h1>
+<p class="page-intro">Don’t see a local chapter near you? Reach out to us if you are interested in hosting a local chapter in your area!</p>
+</div>
+<div id="chapter-map" aria-label="Map of Rivian Clubs of America chapters"></div>
+<div class="regions">
+<section class="region">
+<h2>Arizona</h2>
+<ul>
+<li><a href="arizona/">Arizona Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>California</h2>
+<ul>
+<li><a href="bayarea/">Bay Area Rivian Club</a></li>
+<li><a href="coachellavalley/">Coachella Valley Rivian Club</a></li>
+<li><a href="losangeles/">Los Angeles Rivian Club</a></li>
+<li><a href="orangecounty/">Orange County Rivian Club</a></li>
+<li><a href="sandiego/">San Diego Rivian Club</a></li>
+<li><a href="sangabrielvalley/">San Gabriel Valley Rivian Club</a></li>
+<li><a href="sierranevada/">Sierra Nevada Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Colorado</h2>
+<ul>
+<li><a href="rockymountain/">Rocky Mountain Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Connecticut</h2>
+<ul>
+<li><a href="connecticut/">Connecticut Rivian Club</a></li>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Delaware</h2>
+<ul>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>District of Columbia</h2>
+<ul>
+<li><a href="midatlantic/">Mid Atlantic Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Dominican Republic</h2>
+<ul>
+<li><a href="dominicanrepublic/">Dominican Republic Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Florida</h2>
+<ul>
+<li><a href="florida/">Florida Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Georgia</h2>
+<ul>
+<li><a href="georgia/">Georgia Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Idaho</h2>
+<ul>
+<li><a href="idaho/">Idaho Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Kansas</h2>
+<ul>
+<li><a href="kansascity/">Kansas City Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Maine</h2>
+<ul>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Maryland</h2>
+<ul>
+<li><a href="midatlantic/">Mid Atlantic Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Massachusetts</h2>
+<ul>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Missouri</h2>
+<ul>
+<li><a href="kansascity/">Kansas City Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Nevada</h2>
+<ul>
+<li><a href="lasvegas/">Las Vegas Rivian Club</a></li>
+<li><a href="sierranevada/">Sierra Nevada Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>New Hampshire</h2>
+<ul>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>New Jersey</h2>
+<ul>
+<li><a href="newjersey/">New Jersey Rivian Club</a></li>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>New York</h2>
+<ul>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>North Carolina</h2>
+<ul>
+<li><a href="carolina/">Carolina Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Ohio</h2>
+<ul>
+<li><a href="buckeyestate/">Buckeye State Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Oregon</h2>
+<ul>
+<li><a href="centraloregon/">Central Oregon Rivian Club</a></li>
+<li><a href="portland/">Portland Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Pennsylvania</h2>
+<ul>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Rhode Island</h2>
+<ul>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>South Carolina</h2>
+<ul>
+<li><a href="carolina/">Carolina Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Tennessee</h2>
+<ul>
+<li><a href="tennessee/">Tennessee Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Texas</h2>
+<ul>
+<li><a href="lonestar/">Lone Star Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Vermont</h2>
+<ul>
+<li><a href="northeast/">Northeast Rivian Club</a></li>
+</ul>
+</section>
+<section class="region">
+<h2>Virginia</h2>
+<ul>
+<li><a href="midatlantic/">Mid Atlantic Rivian Club</a></li>
+</ul>
+</section>
+</div>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function(){
+  var markers = [{"slug":"arizona","title":"Arizona Rivian Club","lat":33.4483771,"lng":-112.0740373,"hasPage":true},{"slug":"bayarea","title":"Bay Area Rivian Club","lat":37.71525005309841,"lng":-122.29959115999405,"hasPage":true},{"slug":"buckeyestate","title":"Buckeye State Rivian Club","lat":40.17600382318487,"lng":-83.05462840206145,"hasPage":true},{"slug":"carolina","title":"Carolina Rivian Club","lat":35.014790126867894,"lng":-80.85133198345531,"hasPage":true},{"slug":"centraloregon","title":"Central Oregon Rivian Club","lat":44.0581728,"lng":-121.3153096,"hasPage":true},{"slug":"chicagoland","title":"Chicagoland Rivian Club","lat":41.8781136,"lng":-87.6297982,"hasPage":false},{"slug":"coachellavalley","title":"Coachella Valley Rivian Club","lat":33.6803003,"lng":-116.173894,"hasPage":true},{"slug":"connecticut","title":"Connecticut Rivian Club","lat":41.6032207,"lng":-73.087749,"hasPage":true},{"slug":"dominicanrepublic","title":"Dominican Republic Rivian Club","lat":18.4626178,"lng":-69.93609239999999,"hasPage":true},{"slug":"florida","title":"Florida Rivian Club","lat":27.925936380516475,"lng":-81.64782089375556,"hasPage":true},{"slug":"georgia","title":"Georgia Rivian Club","lat":33.748752,"lng":-84.38768449999999,"hasPage":true},{"slug":"idaho","title":"Idaho Rivian Club","lat":44.0682019,"lng":-114.7420408,"hasPage":true},{"slug":"kansascity","title":"Kansas City Rivian Club","lat":39.11553139999999,"lng":-94.62678729999999,"hasPage":true},{"slug":"lasvegas","title":"Las Vegas Rivian Club","lat":36.171563,"lng":-115.1391009,"hasPage":true},{"slug":"lonestar","title":"Lone Star Rivian Club","lat":29.7604267,"lng":-95.3698028,"hasPage":true},{"slug":"losangeles","title":"Los Angeles Rivian Club","lat":34.0549076,"lng":-118.242643,"hasPage":true},{"slug":"midatlantic","title":"Mid Atlantic Rivian Club","lat":39.2903848,"lng":-76.6121893,"hasPage":true},{"slug":"newjersey","title":"New Jersey Rivian Club","lat":40.0583238,"lng":-74.4056612,"hasPage":true},{"slug":"northeast","title":"Northeast Rivian Club","lat":43.038987878079,"lng":-74.05110092230635,"hasPage":true},{"slug":"northtexas","title":"North Texas Rivian Club","lat":32.7766642,"lng":-96.79698789999999,"hasPage":false},{"slug":"orangecounty","title":"Orange County Rivian Club","lat":33.6845673,"lng":-117.8265049,"hasPage":true},{"slug":"portland","title":"Portland Rivian Club","lat":45.515232,"lng":-122.6783853,"hasPage":true},{"slug":"rockymountain","title":"Rocky Mountain Rivian Club","lat":39.7392358,"lng":-104.990251,"hasPage":true},{"slug":"sandiego","title":"San Diego Rivian Club","lat":32.715738,"lng":-117.1610838,"hasPage":true},{"slug":"sangabrielvalley","title":"San Gabriel Valley Rivian Club","lat":34.0333443,"lng":-118.0370113,"hasPage":true},{"slug":"sierranevada","title":"Sierra Nevada Rivian Club","lat":39.09353330483035,"lng":-120.0319841753388,"hasPage":true},{"slug":"tennessee","title":"Tennessee Rivian Club","lat":35.5174913,"lng":-86.5804473,"hasPage":true}];
+  var map = L.map('chapter-map', { scrollWheelZoom: false }).setView([37.15, -96.24], 4);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+  markers.forEach(function(m){
+    var popup = m.hasPage
+      ? '<a href="' + m.slug + '/">' + m.title + '</a>'
+      : m.title;
+    L.marker([m.lat, m.lng]).addTo(map).bindPopup(popup);
+  });
+})();
+</script>
+<footer class="site-footer">
+<p>Rivian Clubs of America is not affiliated with Rivian Automotive, Inc.</p>
+<p>rivianclubs.org is a division of Rivian Clubs of America, Inc. © Copyright 2023 - 2026</p>
+</footer>
+</body>
+</html>
